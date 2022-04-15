@@ -42,10 +42,11 @@ public class NIOServer {
 						// 客户端连接请求事件
 						SocketChannel socketChannel = serverSocketChannel.accept();
 						socketChannel.configureBlocking(false);
+						// 将客户端的 Channel 注册到 selector
 						socketChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(1024));
 					}
 					if (key.isReadable()) {
-						// 读取客户端数据事件
+						// 读取客户端数据事件，这个时候获取到的 Channel 就是刚刚注册的客户端 Channel
 						try (SocketChannel channel = (SocketChannel) key.channel()) {
 							ByteBuffer buffer = (ByteBuffer) key.attachment();
 							int read = channel.read(buffer);
